@@ -1,0 +1,11 @@
+[Unit]
+Description=TaylorsHomework
+
+[Service]
+WorkingDirectory=/usr/lib/node_modules/bonescript
+EnvironmentFile=-/etc/default/node
+ExecStart=/usr/bin/node server.js
+SyslogIdentifier=bonescript
+
+[Install]
+WantedBy=multi-user.target
