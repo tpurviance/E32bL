@@ -1,3 +1,4 @@
+For some reason, I found some of the USB options in the book were under the I2C section. also there are more options being set in each of my sections than were set in each of the sections in the books listing.
 ...
 
 #

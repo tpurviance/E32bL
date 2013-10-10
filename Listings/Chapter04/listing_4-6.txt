@@ -1,3 +1,5 @@
+My headers_install default is obviously different. The list of options for build targets is also different. Also, the make command ca take the RECORDMCOUNT_WARN and W=n options.
+
 Cleaning targets:
   clean		  - Remove most generated files but keep the config and
                     enough build support to build external modules

@@ -1,52 +1,57 @@
-config ARCH_OMAP
-	bool
+My Kconfig file started with a bunch of config architecture stuff for ARM and has an additional source "kernel/Kconfig.freezer." Also, mine had lots (~50) of different versions of the last 'source' line. Maybe they just didn't show most of thiers in the book listing?
 
-config ARCH_OMAP2
-	bool "TI OMAP2"
-	depends on ARCH_MULTI_V6
-	select ARCH_OMAP2PLUS
-	select CPU_V6
+...
+
+source "init/Kconfig"
+
+source "kernel/Kconfig.freezer"
+
+menu "System Type"
+
+config MMU
+	bool "MMU-based Paged Memory Management Support"
+	default y
+	help
+	  Select if you want MMU-based virtualised addressing space
+	  support by paged memory management. If unsure, say 'Y'.
+
+#
+# The "ARM system type" choice list is ordered alphabetically by option
+# text.  Please add new entries in the option alphabetic order.
+#
+choice
+	prompt "ARM system type"
+	default ARCH_MULTIPLATFORM
+
+config ARCH_MULTIPLATFORM
+	bool "Allow multiple platforms to be selected"
+	depends on MMU
+	select ARM_PATCH_PHYS_VIRT
+	select AUTO_ZRELADDR
+	select COMMON_CLK
 	select MULTI_IRQ_HANDLER
-	select SOC_HAS_OMAP2_SDRC
-	select COMMON_CLK
+	select SPARSE_IRQ
+	select USE_OF
 
-config ARCH_OMAP3
-	bool "TI OMAP3"
-	depends on ARCH_MULTI_V7
-	select ARCH_OMAP2PLUS
-	select ARCH_HAS_OPP
-	select ARM_CPU_SUSPEND if PM
-	select CPU_V7
+config ARCH_INTEGRATOR
+	bool "ARM Ltd. Integrator family"
+	select ARCH_HAS_CPUFREQ
+	select ARM_AMBA
+	select COMMON_CLK
+	select COMMON_CLK_VERSATILE
+	select GENERIC_CLOCKEVENTS
+	select HAVE_TCM
+	select ICST
 	select MULTI_IRQ_HANDLER
-	select OMAP_INTERCONNECT
-	select PM_OPP if PM
-	select PM_RUNTIME if CPU_IDLE
-	select SOC_HAS_OMAP2_SDRC
-	select COMMON_CLK
-	select USB_ARCH_HAS_EHCI if USB_SUPPORT
+	select NEED_MACH_MEMORY_H
+	select PLAT_VERSATILE
+	select SPARSE_IRQ
+	select VERSATILE_FPGA_IRQ
+	help
+	  Support for ARM's Integrator platform.
 
-config ARCH_OMAP4
-	bool "TI OMAP4"
-	depends on ARCH_MULTI_V7
-	select ARCH_OMAP2PLUS
-	select ARCH_HAS_OPP
-	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
-	select ARM_CPU_SUSPEND if PM
-	select ARM_ERRATA_720789
-	select ARM_GIC
-	select CACHE_L2X0
-	select CPU_V7
-	select HAVE_ARM_SCU if SMP
-	select HAVE_ARM_TWD if SMP
-	select HAVE_SMP
-	select OMAP_INTERCONNECT
-	select PL310_ERRATA_588369
-	select PL310_ERRATA_727915
-	select PM_OPP if PM
-	select PM_RUNTIME if CPU_IDLE
-	select USB_ARCH_HAS_EHCI if USB_SUPPORT
-	select COMMON_CLK
-	select ARM_ERRATA_754322
-	select ARM_ERRATA_775420
+...
+
+source "arch/arm/mach-ixp4xx/Kconfig"
 
 ...

@@ -1,3 +1,6 @@
+Once again, my version has way more CONFIG_USB options than the book. Maybe the book truncated their results and didn't note that? Maybe the Beagle's USB system is more complicated or does more things. 
+I'm noting there all sorts of unexpected USB things in my list, like CONFIG_USB_LCD_MODULE. This seems to support the "does more stuff" theory.
+
 #define CONFIG_USB_ALI_M5632 1
 #define CONFIG_USB_SERIAL_HP4X_MODULE 1
 #define CONFIG_USB_SI470X_MODULE 1
