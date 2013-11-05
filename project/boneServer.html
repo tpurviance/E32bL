@@ -8,42 +8,6 @@
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/msg/js/en.js"></script>
 		<script type="text/javascript" src="./node_modules/socket.io/lib/socket.io.js"></script>
 		<script type="text/javascript" src="matrixLED.js"></script>
-		<script type="text/javascript">
-			Blockly.Blocks['light_set_light'] = {
-				init: function() {
-					this.setHelpUrl('http://www.example.com/');
-					this.setColour(330);
-					this.appendValueInput("pos")
-						.setCheck("Number")
-						.appendTitle("Set Light at position");
-					this.appendValueInput("red")
-						.setCheck("Number")
-						.setAlign(Blockly.ALIGN_RIGHT)
-						.appendTitle("to RGB");
-					this.appendValueInput("green")
-						.setCheck("Number")
-						.setAlign(Blockly.ALIGN_RIGHT);
-					this.appendValueInput("blue")
-						.setCheck("Number")
-						.setAlign(Blockly.ALIGN_RIGHT);
-					this.setInputsInline(true);
-					this.setPreviousStatement(true, "null");
-					this.setNextStatement(true, "null");
-					this.setTooltip('');
-				}
-			};
-
-			Blockly.JavaScript['light_set_light'] = function(block) {
-				var value_pos = Blockly.JavaScript.valueToCode(block, 'pos', Blockly.JavaScript.ORDER_ATOMIC);
-				var value_red = Blockly.JavaScript.valueToCode(block, 'red', Blockly.JavaScript.ORDER_ATOMIC);
-				var value_green = Blockly.JavaScript.valueToCode(block, 'green', Blockly.JavaScript.ORDER_ATOMIC);
-				var value_blue = Blockly.JavaScript.valueToCode(block, 'blue', Blockly.JavaScript.ORDER_ATOMIC);
-				// TODO: Assemble ' + language + ' into code variable.
-
-				var code = 'console.log("sending light[' + value_pos +','+ value_red +','+ value_green +','+ value_blue + ']");';
-				return code;
-			};
-		</script>
 		<style>
 		  html, body {
 			background-color: #fff;
@@ -267,4 +231,41 @@
 			<category name="Procedures" custom="PROCEDURE"></category>
 		</xml>
 	</body>
+	
+	<script type="text/javascript">
+		Blockly.Blocks['light_set_light'] = {
+			init: function() {
+				this.setHelpUrl('http://www.example.com/');
+				this.setColour(330);
+				this.appendValueInput("pos")
+					.setCheck("Number")
+					.appendTitle("Set Light at position");
+				this.appendValueInput("red")
+					.setCheck("Number")
+					.setAlign(Blockly.ALIGN_RIGHT)
+					.appendTitle("to RGB");
+				this.appendValueInput("green")
+					.setCheck("Number")
+					.setAlign(Blockly.ALIGN_RIGHT);
+				this.appendValueInput("blue")
+					.setCheck("Number")
+					.setAlign(Blockly.ALIGN_RIGHT);
+				this.setInputsInline(true);
+				this.setPreviousStatement(true, "null");
+				this.setNextStatement(true, "null");
+				this.setTooltip('');
+			}
+		};
+
+		Blockly.JavaScript['light_set_light'] = function(block) {
+			var value_pos = Blockly.JavaScript.valueToCode(block, 'pos', Blockly.JavaScript.ORDER_ATOMIC);
+			var value_red = Blockly.JavaScript.valueToCode(block, 'red', Blockly.JavaScript.ORDER_ATOMIC);
+			var value_green = Blockly.JavaScript.valueToCode(block, 'green', Blockly.JavaScript.ORDER_ATOMIC);
+			var value_blue = Blockly.JavaScript.valueToCode(block, 'blue', Blockly.JavaScript.ORDER_ATOMIC);
+			// TODO: Assemble ' + language + ' into code variable.
+
+			var code = 'console.log("sending light[' + value_pos +','+ value_red +','+ value_green +','+ value_blue + ']");';
+			return code;
+		};
+	</script>
 </html>
