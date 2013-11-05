@@ -4,9 +4,46 @@
 		<meta charset="utf-8">
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
+		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/msg/js/en.js"></script>
-		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="./node_modules/socket.io/lib/socket.io.js"></script>
 		<script type="text/javascript" src="matrixLED.js"></script>
+		<script type="text/javascript">
+			Blockly.Blocks['light_set_light'] = {
+				init: function() {
+					this.setHelpUrl('http://www.example.com/');
+					this.setColour(330);
+					this.appendValueInput("pos")
+						.setCheck("Number")
+						.appendTitle("Set Light at position");
+					this.appendValueInput("red")
+						.setCheck("Number")
+						.setAlign(Blockly.ALIGN_RIGHT)
+						.appendTitle("to RGB");
+					this.appendValueInput("green")
+						.setCheck("Number")
+						.setAlign(Blockly.ALIGN_RIGHT);
+					this.appendValueInput("blue")
+						.setCheck("Number")
+						.setAlign(Blockly.ALIGN_RIGHT);
+					this.setInputsInline(true);
+					this.setPreviousStatement(true, "null");
+					this.setNextStatement(true, "null");
+					this.setTooltip('');
+				}
+			};
+
+			Blockly.JavaScript['light_set_light'] = function(block) {
+				var value_pos = Blockly.JavaScript.valueToCode(block, 'pos', Blockly.JavaScript.ORDER_ATOMIC);
+				var value_red = Blockly.JavaScript.valueToCode(block, 'red', Blockly.JavaScript.ORDER_ATOMIC);
+				var value_green = Blockly.JavaScript.valueToCode(block, 'green', Blockly.JavaScript.ORDER_ATOMIC);
+				var value_blue = Blockly.JavaScript.valueToCode(block, 'blue', Blockly.JavaScript.ORDER_ATOMIC);
+				// TODO: Assemble ' + language + ' into code variable.
+
+				var code = 'console.log("sending light[' + value_pos +','+ value_red +','+ value_green +','+ value_blue + ']");';
+				return code;
+			};
+		</script>
 		<style>
 		  html, body {
 			background-color: #fff;
@@ -30,13 +67,30 @@
 				{path: './blockly/', toolbox: document.getElementById('toolbox')});
 			// Let the top-level application know that Blockly is ready.
 			//window.parent.blocklyLoaded(Blockly);
+			var runJS = function() {
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
+				var timeouts = 0;
+				var checkTimeout = function() {
+					if (timeouts++ > 1000000) {
+						throw BlocklyApps.getMsg('Code_timeout');
+					}
+				};
+				var code = Blockly.JavaScript.workspaceToCode();
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				try {
+					eval(code);
+				} catch (e) {
+					alert(BlocklyApps.getMsg('Code_badCode').replace('%1', e));
+				}
+			};
+			document.getElementById("runButton").onclick = runJS;
 		  }
 		</script>
 	</head>
 	<body onload="init()">
 		<table border="1" bordercolor="#000000" style="background-color:#FFFFFF" width="100%" cellpadding="3" cellspacing="3" height="100%">
 			<tr>
-				<td><p>Pleace program the LEDstring with the drag and drop interface bellow.</p><p>Be sure to use the "Set Light" and "Delay" blocks. <span id="statusUpdate"></span></p></td>
+				<td><p>Pleace program the LEDstring with the drag and drop interface bellow. <button type="button" id="runButton">Run</button></p><p>Be sure to use the "Set Light" and "Delay" blocks. <span id="statusUpdate"></span></p></td>
 			</tr>
 			<tr height="100%">
 				<td></td>
@@ -207,6 +261,7 @@
 				<block type="colour_random"></block>
 				<block type="colour_rgb"></block>
 				<block type="colour_blend"></block>
+				<block type="light_set_light"></block>
 			</category>
 			<category name="Variables" custom="VARIABLE"></category>
 			<category name="Procedures" custom="PROCEDURE"></category>
