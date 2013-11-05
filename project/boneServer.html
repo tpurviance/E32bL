@@ -19,6 +19,10 @@
 			height: 100%;
 			width: 100%;
 		  }
+		  #statusUpdate {
+			color:red;
+			font-weight:bold;
+		  }
 		</style>
 		<script>
 		  function init() {
@@ -32,7 +36,7 @@
 	<body onload="init()">
 		<table border="1" bordercolor="#000000" style="background-color:#FFFFFF" width="100%" cellpadding="3" cellspacing="3" height="100%">
 			<tr>
-				<td><p>Pleace program the LEDstring with the drag and drop interface bellow.</p><p>Be sure to use the "Set Light" and "Delay" blocks</p></td>
+				<td><p>Pleace program the LEDstring with the drag and drop interface bellow.</p><p>Be sure to use the "Set Light" and "Delay" blocks. <span id="statusUpdate"></span></p></td>
 			</tr>
 			<tr height="100%">
 				<td></td>

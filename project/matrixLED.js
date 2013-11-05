@@ -36,7 +36,7 @@ function disconnect() {
 }
 
 function status_update(txt){
-$('#status').html(txt);
+	document.getElementById("statusUpdate").innerText = txt;
 }
 
 connect();
