@@ -5,6 +5,8 @@
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
 		<script type="text/javascript" src="http://blockly-demo.appspot.com/static/msg/js/en.js"></script>
+		<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript" src="matrixLED.js"></script>
 		<style>
 		  html, body {
 			background-color: #fff;
@@ -20,14 +22,23 @@
 		</style>
 		<script>
 		  function init() {
-			Blockly.inject(document.body,
-				{path: '../../', toolbox: document.getElementById('toolbox')});
+			Blockly.inject(document.body.getElementsByTagName("td")[1],
+				{path: './blockly/', toolbox: document.getElementById('toolbox')});
 			// Let the top-level application know that Blockly is ready.
 			//window.parent.blocklyLoaded(Blockly);
 		  }
 		</script>
 	</head>
 	<body onload="init()">
+		<table border="1" bordercolor="#000000" style="background-color:#FFFFFF" width="100%" cellpadding="3" cellspacing="3" height="100%">
+			<tr>
+				<td><p>Pleace program the LEDstring with the drag and drop interface bellow.</p><p>Be sure to use the "Set Light" and "Delay" blocks</p></td>
+			</tr>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+	
 		<xml id="toolbox" style="display: none">
 			<category name="Logic">
 				<block type="controls_if"></block>
