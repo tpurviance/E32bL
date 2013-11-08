@@ -267,6 +267,7 @@
 			// TODO: Assemble ' + language + ' into code variable.
 
 			var code = 'console.log("sending light[' + value_pos +','+ value_red +','+ value_green +','+ value_blue + ']");';
+			code += "socket.emit('LEDChain',{r:"+value_red+", g:"+value_green+", b:"+value_blue+", p:"+value_pos+"})";
 			return code;
 		};
 	</script>
