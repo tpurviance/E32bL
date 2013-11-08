@@ -65,7 +65,7 @@ io.sockets.on('connection', function (socket) {
 	console.log("Connection " + socket.id + " accepted.");
 
 	socket.on('LEDChain', function (params) {
-		var ledChainPath = "echo " params.r + " " + params.g + " " + params.b + " " + params.p + " > /sys/firmware/lpd8806/device/rgb";
+		var ledChainPath = "echo " + params.r + " " + params.g + " " + params.b + " " + params.p + " > /sys/firmware/lpd8806/device/rgb";
 		console.log('LED sent: ' +ledChainPath);
 		child_process.exec(ledChainPath, function(a,b,c){});
 	});
