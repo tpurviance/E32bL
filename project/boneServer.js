@@ -64,16 +64,16 @@ io.sockets.on('connection', function (socket) {
 
 	console.log("Connection " + socket.id + " accepted.");
 
-	socket.on('LEDChain', function (params) {
-		var ledChainPath = "echo " + params.r + " " + params.g + " " + params.b + " " + params.p + " > /sys/firmware/lpd8806/device/rgb";
-		console.log('LED sent: ' +ledChainPath);
-		child_process.exec(ledChainPath, function(a,b,c){});
-	});
+	// socket.on('LEDChain', function (params) {
+		// var ledChainPath = "echo " + params.r + " " + params.g + " " + params.b + " " + params.p + " > /sys/firmware/lpd8806/device/rgb";
+		// console.log('LED sent: ' +ledChainPath);
+		// child_process.exec(ledChainPath, function(a,b,c){});
+	// });
 
 	socket.on('LEDChain2', function (params) {
 		var ledChainPath = "echo " 
 		for (var i = 0; i < params.length; i++)
-			ledChainPath += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + " "; 
+			ledChainPath += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + "\n"; 
 		ledChainPath += " > /sys/firmware/lpd8806/device/rgb";
 		//console.log('LED sent: ' +ledChainPath);
 		child_process.exec(ledChainPath, function(a,b,c){});
