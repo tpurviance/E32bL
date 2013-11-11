@@ -1,0 +1,9 @@
+1. boneserver.js runs on the beagle, waiting to incomming connections that will automatically establish connections to clients as they go to the site. It will then subscribe to messages sent through socket IO for each connection, as well as send (via an emit()) the matrix data as a string for the current state of the LED matrix. after that, the client will update the contents of thier matrix display. 
+
+2. If the user turns lights on/off via clicking, the onlcik handler of the LED matrix elements will both change thier state locally, as well as emit a signal to the bone telling it what light needs turned on/off via the "i2cset" socket signal we defined. The bone then updates its own contents when it recieves the signal using the data from the i2cset signal.
+
+3. there is an css class called ".on" that provieds the coloring to elements that are on in the matrix displays of clients.
+
+4. The same types of messages will be sent. however, the messages that are sent to the servers will now also bear the red light's data, and the red light data that comes back from the server (the matrix message which already contains the red data) simply needs parsed differently by the client to get the red data out (instead of skipping the red data as it currently does).
+
+5. I don't think that I had to change boneserver.
