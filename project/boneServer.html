@@ -246,6 +246,7 @@
 			</category>
 			<category name="Lights">
 				<block type="light_set_light"></block>
+				<block type="send_lights"></block>
 			</category>
 			<category name="Colour">
 				<block type="colour_picker"></block>
@@ -293,6 +294,23 @@
 			//var code = 'console.log("sending light[' + value_pos +','+ value_red +','+ value_green +','+ value_blue + ']");';
 			var code = "setLight(" + value_red +", " + value_green + ", " + value_blue + ", " + value_pos +");";
 			//code += "socket.emit('LEDChain',{r:"+value_red+", g:"+value_green+", b:"+value_blue+", p:"+value_pos+"});";
+			return code;
+		};
+		
+		Blockly.Blocks['send_lights'] = {
+			init: function() {
+				this.setHelpUrl('http://www.example.com/');
+				this.setColour(330);
+				this.appendDummyInput()
+					.appendTitle("Display light changes");
+				this.setPreviousStatement(true);
+				this.setNextStatement(true);
+				this.setTooltip('Send the lights to the bone and update the local display');
+			}
+		};
+		
+		Blockly.JavaScript['send_lights'] = function(block) {
+			var code = 'sendLights();';
 			return code;
 		};
 	</script>

@@ -38,10 +38,7 @@ window.setTimeout("drawCanvas()",0);
 var setLight = function(r, g, b, p){
 	if (p >=0 && p <numLights){
 		disp[p] = [limer(r,0,127),limer(g,0,127),limer(b,0,127),1];
-	} else {
-		sendLights();
-		drawCanvas();
-	}
+	} 
 };
 
 var sendLights = function() {
@@ -52,6 +49,7 @@ var sendLights = function() {
 			disp[i][3] = 0;
 		}
 	}
+	drawCanvas();
 	socket.emit('LEDChain2', lightsToSend);
 };
 

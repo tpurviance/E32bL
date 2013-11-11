@@ -9,7 +9,7 @@ var port = 8080, // Port to listen on
 	http = require('http'),
 	url = require('url'),
 	fs = require('fs'),
-	//b = require('bonescript'),
+	b = require('bonescript'),
 	child_process = require('child_process'),
 	server,
 	connectCount = 0,	// Number of connections to server
@@ -71,12 +71,14 @@ io.sockets.on('connection', function (socket) {
 	// });
 
 	socket.on('LEDChain2', function (params) {
-		var ledChainPath = "echo '" 
+		var ledChain = "" 
 		for (var i = 0; i < params.length; i++)
-			ledChainPath += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + "\n"; 
-		ledChainPath += "' > /sys/firmware/lpd8806/device/rgb";
+			ledChain += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + "\n"; 
+		
+		var file ='/sys/firmware/lpd8806/device/rgb';
+		b.writeTextFile(file, ledChain);
 		//console.log('LED sent: ' +ledChainPath);
-		child_process.exec(ledChainPath, function(a,b,c){});
+		//child_process.exec(ledChainPath, function(a,b,c){});
 	});
 	
 	socket.on('led', function (ledNum) {
