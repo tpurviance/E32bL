@@ -73,19 +73,17 @@ var setLights = function(lightsToChange){
 };
 
 var processLights = function(){
-
-		var currentDelta;
-		while (lightDeltasQueue.length > 0){
-			currentDelta= lightDeltasQueue.shift();
-			setLights(currentDelta);
-			lightDeltasQueue.totalDelay -= (currentDelta.delay | 0);
-			if (10000 > (currentDelta.delay | 0) > 0 ) {
-				window.setTimeout(processLights, currentDelta.delay);
-				return;
-			}
+	var currentDelta;
+	while (lightDeltasQueue.length > 0){
+		currentDelta= lightDeltasQueue.shift();
+		setLights(currentDelta);
+		lightDeltasQueue.totalDelay -= (currentDelta.delay | 0);
+		if (10000 > (currentDelta.delay | 0) > 0 ) {
+			window.setTimeout(processLights, currentDelta.delay);
+			return;
 		}
-		lightsDisplaying = false;
 	}
+	lightsDisplaying = false;
 };
 
 var restartProcessing = function(){
