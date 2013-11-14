@@ -71,12 +71,15 @@ io.sockets.on('connection', function (socket) {
 	// });
 
 	socket.on('LEDChain2', function (params) {
-		var ledChain = "" 
-		for (var i = 0; i < params.length; i++)
-			ledChain += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + "\n"; 
-		
+		var ledChain = "";
 		var file ='/sys/firmware/lpd8806/device/rgb';
-		b.writeTextFile(file, ledChain);
+		for (var i = 0; i < params.length; i++){
+			ledChain = "";
+			ledChain += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),150) | 0) + "\n"; 
+			b.writeTextFile(file, ledChain);
+		}
+		
+		
 		//console.log('LED sent: ' +ledChainPath);
 		//child_process.exec(ledChainPath, function(a,b,c){});
 	});
