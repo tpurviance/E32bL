@@ -79,7 +79,7 @@ var processLights = function(){
 		setLights(currentDelta);
 		lightDeltasQueue.totalDelay -= (currentDelta.delay | 0);
 		if (10000 > (currentDelta.delay | 0) > 0 ) {
-			setTimeout("processLights()", currentDelta.delay);
+			setTimeout(processLights, currentDelta.delay);
 			return;
 		}
 	}
