@@ -76,7 +76,7 @@
 					<p>Pleace program the LEDstring with the drag and drop interface bellow. <button type="button" id="runButton">Run</button></p>
 					<p>Be sure to use the "Set Light" and "Delay" blocks. 
 						<span id="statusUpdate"></span>
-						<div id="cnvs"><canvas id="canvas" width="1350" height="9"></canvas></div>
+						<div id="cnvs"><canvas id="canvas" width="1440" height="9"></canvas></div>
 					</p>
 				</td>
 			</tr>
@@ -246,14 +246,14 @@
 			</category>
 			<category name="Lights">
 				<block type="light_set_light"></block>
-				<block type="send_lights"></block>
+				<block type="light_send_lights"></block>
 			</category>
-			<category name="Colour">
+			<!--category name="Colour">
 				<block type="colour_picker"></block>
 				<block type="colour_random"></block>
 				<block type="colour_rgb"></block>
 				<block type="colour_blend"></block>
-			</category>
+			</category-->
 			<category name="Variables" custom="VARIABLE"></category>
 			<category name="Procedures" custom="PROCEDURE"></category>
 		</xml>
@@ -297,20 +297,25 @@
 			return code;
 		};
 		
-		Blockly.Blocks['send_lights'] = {
+		Blockly.Blocks['light_send_lights'] = {
 			init: function() {
 				this.setHelpUrl('http://www.example.com/');
 				this.setColour(330);
+				this.appendValueInput("delay")
+					.setCheck("Number")
+					.appendTitle("Send lights then delay light updates for");
 				this.appendDummyInput()
-					.appendTitle("Display light changes");
-				this.setPreviousStatement(true);
-				this.setNextStatement(true);
-				this.setTooltip('Send the lights to the bone and update the local display');
+					.appendTitle("milliseconds");
+				this.setInputsInline(true);
+				this.setPreviousStatement(true, "null");
+				this.setNextStatement(true, "null");
+				this.setTooltip('');
 			}
 		};
-		
-		Blockly.JavaScript['send_lights'] = function(block) {
-			var code = 'sendLights();';
+
+		Blockly.JavaScript['light_send_lights'] = function(block) {
+			var value_delay = Blockly.JavaScript.valueToCode(block, 'delay', Blockly.JavaScript.ORDER_ATOMIC);
+			var code = 'sendLights(' + value_delay + ');';
 			return code;
 		};
 	</script>

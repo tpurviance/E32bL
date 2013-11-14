@@ -4,14 +4,14 @@ disp = [];
 
 
 var canvas;
-var numLights=150;
+var NUMLIGHTS=160;
 
 var limer = function(n, l, h) {
 	return Math.min(Math.max(n,l),h);
 }
 
-for (var i = 0; i < numLights; i++) {
-	disp[i] = [limer(i,0,127),limer(numLights-i,0,127),127,0];
+for (var i = 0; i < NUMLIGHTS; i++) {
+	disp[i] = [limer(i,0,127),limer(NUMLIGHTS-i,0,127),127,0];
 }
 
 var drawCanvas = function() {
@@ -26,7 +26,7 @@ var drawCanvas = function() {
 	ctx.fillStyle = "rgb(0,0,0)";
 	ctx.fillRect(0, 0, width, height);
 
-	for (var i = 0; i < numLights ; i++) {
+	for (var i = 0; i < NUMLIGHTS ; i++) {
 		ctx.fillStyle = "rgb(" +(2*disp[i][0]) + "," + (2*disp[i][1]) + "," + (2*disp[i][2]) + ")";
 		ctx.fillRect((9*i)+1, 1, 7, 7);
 	 }
@@ -36,14 +36,15 @@ window.setTimeout("drawCanvas()",0);
 
 
 var setLight = function(r, g, b, p){
-	if (p >=0 && p <numLights){
+	if (p >=0 && p <NUMLIGHTS){
 		disp[p] = [limer(r,0,127),limer(g,0,127),limer(b,0,127),1];
 	} 
 };
 
-var sendLights = function() {
+var sendLights = function(delay) {
 	var lightsToSend  =[];
-	for (var i = 0; i < numLights; i++){
+	lightsToSend.delay = (delay | 0);
+	for (var i = 0; i < NUMLIGHTS; i++){
 		if (disp[i][3] == 1){
 			lightsToSend[lightsToSend.length] = [disp[i][0],disp[i][1],disp[i][2],i];
 			disp[i][3] = 0;

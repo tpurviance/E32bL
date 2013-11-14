@@ -10,11 +10,18 @@ var port = 8080, // Port to listen on
 	url = require('url'),
 	fs = require('fs'),
 	b = require('bonescript'),
-	child_process = require('child_process'),
+	//child_process = require('child_process'),
 	server,
 	connectCount = 0,	// Number of connections to server
-	errCount = 0;	// Counts the AIN errors.
+	NUMLIGHTS = 160,    // Number of LEDs in the LED string
+	MAX_TOTAL_DELAY_SECONDS = 5,    // maximum ammount of total delay time allowed in lightDeltasQueue
+	MAX_TOTAL_DELTAS = NUMLIGHTS * 2,    // maximum size of the light deltas queue
+	lightsDisplying = false,  // if it is working it's way through the light deltas queue currently
+	lightDeltasQueue = [];   // the list of lights changes / delays to do, in order.
 
+lightDeltasQueue.totalDelay = 0; // miliseconds of delay in the frams in the 
+	
+	
 // Initialize various IO things.
 function initIO() {
 	// Make sure gpios 7 and 20 are available.
@@ -37,9 +44,9 @@ server = http.createServer(function (req, res) {
 // server code
 	var path = url.parse(req.url).pathname;
 	console.log("path: " + path);
-	if (path === '/') {
+	//if (path === '/') {
 		path = '/boneServer.html';
-	}
+	//}
 
 	fs.readFile(__dirname + path, function (err, data) {
 		if (err) {return send404(res); }
@@ -52,12 +59,50 @@ server = http.createServer(function (req, res) {
 server.listen(port);
 console.log("Listening on " + port);
 
+var setLights = function(lightsToChange){
+	var ledChain = "";
+	var file ='/sys/firmware/lpd8806/device/rgb';
+	for (var i = 0; i < lightsToChange.length; i++){
+		ledChain = "";
+		if (0 <= Math.round(lightsToChange[i][3]) <= NUMLIGHTS-1){
+			ledChain += (Math.min(Math.max(Math.round(lightsToChange[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][3]),0),NUMLIGHTS-1) | 0); 
+			b.writeTextFile(file, ledChain);
+		}
+	}
+	b.writeTextFile(file, "\n");
+};
+
+var processLights = function(){
+
+		var currentDelta;
+		while (lightDeltasQueue.length > 0){
+			currentDelta= lightDeltasQueue.shift();
+			setLights(currentDelta);
+			lightDeltasQueue.totalDelay -= (currentDelta.delay | 0);
+			if (10000 > (currentDelta.delay | 0) > 0 ) {
+				window.setTimeout(processLights, currentDelta.delay);
+				return;
+			}
+		}
+		lightsDisplaying = false;
+	}
+};
+
+var restartProcessing = function(){
+	if (lightsDisplaying == false){
+		lightsDisplying = true;
+		processLights();
+	}
+};
+
+
 // socket.io, I choose you
 var io = require('socket.io').listen(server);
 io.set('log level', 2);
 
 // See https://github.com/LearnBoost/socket.io/wiki/Exposed-events
 // for Exposed events
+
 	
 // on a 'connection' event
 io.sockets.on('connection', function (socket) {
@@ -71,48 +116,18 @@ io.sockets.on('connection', function (socket) {
 	// });
 
 	socket.on('LEDChain2', function (params) {
-		var ledChain = "";
-		var file ='/sys/firmware/lpd8806/device/rgb';
-		for (var i = 0; i < params.length; i++){
-			ledChain = "";
-			if (0 <= Math.round(params[i][0]) < NUMLIGHTS){
-				ledChain += (Math.min(Math.max(Math.round(params[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(params[i][3]),0),159) | 0); 
-				b.writeTextFile(file, ledChain);
-			}
+		
+		if (lightDeltasQueue.totalDelay < 1000 * MAX_TOTAL_DELAY_SECONDS && lightDeltasQueue.length < MAX_TOTAL_DELTAS){
+			lightDeltasQueue.push(params);
+			lightDeltasQueue.totalDelay +=  (params.delay | 0);
+			restartProcessing();
+		} else {
+			console.log("dropping frame. current total delay: " + lightDeltasQueue.totalDelay + ", current frame count: " + lightDeltasQueue.length);
 		}
-		b.writeTextFile(file, "\n");
 		
-		
+		//setLights(params);
 		//console.log('LED sent: ' +ledChainPath);
 		//child_process.exec(ledChainPath, function(a,b,c){});
-	});
-	
-	socket.on('led', function (ledNum) {
-		var ledPath = "/sys/class/leds/beaglebone:green:usr" + ledNum + "/brightness";
-//		console.log('LED: ' + ledPath);
-		fs.readFile(ledPath, 'utf8', function (err, data) {
-			if(err) throw err;
-			data = data.substring(0,1) === "1" ? "0" : "1";
-//			console.log("LED%d: %s", ledNum, data);
-			fs.writeFile(ledPath, data);
-		});
-	});
-	
-	// Send a packet of data every time a 'audio' is received.
-	socket.on('matrix', function (i2cNum) {
-//		console.log('Got i2c request:' + i2cNum);
-		child_process.exec('i2cdump -y -r 0x00-0x0f 1 ' + i2cNum + ' b',
-			function (error, stdout, stderr) {
-//	  The LED has 8 16-bit values
-//				console.log('i2cget: "' + stdout + '"');
-		var lines = stdout.split("00: ");
-		// Get the last line of the output and send the string
-		lines = lines[1].substr(0,47);
-		console.log("lines = %s", lines);
-				socket.emit('matrix', lines);
-				if(error) { console.log('error: ' + error); }
-				if(stderr) {console.log('stderr: ' + stderr); }
-			});
 	});
 
 	socket.on('disconnect', function () {
