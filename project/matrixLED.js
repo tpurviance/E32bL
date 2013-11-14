@@ -43,7 +43,6 @@ var setLight = function(r, g, b, p){
 
 var sendLights = function(delay) {
 	var lightsToSend  =[];
-	lightsToSend.delay = (delay | 0);
 	for (var i = 0; i < NUMLIGHTS; i++){
 		if (disp[i][3] == 1){
 			lightsToSend[lightsToSend.length] = [disp[i][0],disp[i][1],disp[i][2],i];
@@ -51,7 +50,7 @@ var sendLights = function(delay) {
 		}
 	}
 	drawCanvas();
-	socket.emit('LEDChain2', lightsToSend);
+	socket.emit('LEDChain2', {data:lightsToSend, delay:(delay | 0)});
 };
 
 //socket.emit('i2cset', {i2cNum: i2cNum, i: 2*i, 

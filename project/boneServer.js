@@ -76,7 +76,7 @@ var processLights = function(){
 	var currentDelta;
 	while (lightDeltasQueue.length > 0){
 		currentDelta= lightDeltasQueue.shift();
-		setLights(currentDelta);
+		setLights(currentDelta.data);
 		lightDeltasQueue.totalDelay -= (currentDelta.delay | 0);
 		if (10000 > (currentDelta.delay | 0) > 0 ) {
 			setTimeout(processLights, currentDelta.delay);
@@ -114,6 +114,7 @@ io.sockets.on('connection', function (socket) {
 	// });
 
 	socket.on('LEDChain2', function (params) {
+		
 		
 		if (lightDeltasQueue.totalDelay < 1000 * MAX_TOTAL_DELAY_SECONDS && lightDeltasQueue.length < MAX_TOTAL_DELTAS){
 			lightDeltasQueue.push(params);
