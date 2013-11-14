@@ -16,7 +16,7 @@ var port = 8080, // Port to listen on
 	NUMLIGHTS = 160,    // Number of LEDs in the LED string
 	MAX_TOTAL_DELAY_SECONDS = 5,    // maximum ammount of total delay time allowed in lightDeltasQueue
 	MAX_TOTAL_DELTAS = NUMLIGHTS * 2,    // maximum size of the light deltas queue
-	lightsDisplying = false,  // if it is working it's way through the light deltas queue currently
+	lightsDisplaying = false,  // if it is working it's way through the light deltas queue currently
 	lightDeltasQueue = [];   // the list of lights changes / delays to do, in order.
 
 lightDeltasQueue.totalDelay = 0; // miliseconds of delay in the frams in the 
@@ -88,7 +88,7 @@ var processLights = function(){
 
 var restartProcessing = function(){
 	if (lightsDisplaying == false){
-		lightsDisplying = true;
+		lightsDisplaying = true;
 		processLights();
 	}
 };
