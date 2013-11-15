@@ -14,8 +14,8 @@ var port = 8080, // Port to listen on
 	server,
 	connectCount = 0,	// Number of connections to server
 	NUMLIGHTS = 160,    // Number of LEDs in the LED string
-	MAX_TOTAL_DELAY_SECONDS = 5,    // maximum ammount of total delay time allowed in lightDeltasQueue
-	MAX_TOTAL_DELTAS = NUMLIGHTS * 2,    // maximum size of the light deltas queue
+	MAX_TOTAL_DELAY_SECONDS = 600,    // maximum ammount of total delay time allowed in lightDeltasQueue
+	MAX_TOTAL_DELTAS = 10000,    // maximum size of the light deltas queue
 	lightsDisplaying = false,  // if it is working it's way through the light deltas queue currently
 	lightDeltasQueue = [];   // the list of lights changes / delays to do, in order.
 
