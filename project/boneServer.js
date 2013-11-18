@@ -65,8 +65,13 @@ var setLights = function(lightsToChange){
 	for (var i = 0; i < lightsToChange.length; i++){
 		ledChain = "";
 		if (0 <= Math.round(lightsToChange[i][3]) <= NUMLIGHTS-1){
-			ledChain += (Math.min(Math.max(Math.round(lightsToChange[i][0]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][1]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][2]),0),127) | 0) + " " + (Math.min(Math.max(Math.round(lightsToChange[i][3]),0),NUMLIGHTS-1) | 0); 
+			ledChain += 
+				(Math.min(Math.max(Math.round(lightsToChange[i][0]),0),127) | 0) + " " + 
+				(Math.min(Math.max(Math.round(lightsToChange[i][1]),0),127) | 0) + " " + 
+				(Math.min(Math.max(Math.round(lightsToChange[i][2]),0),127) | 0) + " " + 
+				(Math.min(Math.max(Math.round(lightsToChange[i][3]),0),NUMLIGHTS-1) | 0); 
 			b.writeTextFile(file, ledChain);
+				
 		}
 	}
 	b.writeTextFile(file, "\n");
@@ -107,15 +112,7 @@ io.sockets.on('connection', function (socket) {
 
 	console.log("Connection " + socket.id + " accepted.");
 
-	// socket.on('LEDChain', function (params) {
-		// var ledChainPath = "echo " + params.r + " " + params.g + " " + params.b + " " + params.p + " > /sys/firmware/lpd8806/device/rgb";
-		// console.log('LED sent: ' +ledChainPath);
-		// child_process.exec(ledChainPath, function(a,b,c){});
-	// });
-
 	socket.on('LEDChain2', function (params) {
-		
-		
 		if (lightDeltasQueue.totalDelay < 1000 * MAX_TOTAL_DELAY_SECONDS && lightDeltasQueue.length < MAX_TOTAL_DELTAS){
 			lightDeltasQueue.push(params);
 			lightDeltasQueue.totalDelay +=  (params.delay | 0);
@@ -123,10 +120,6 @@ io.sockets.on('connection', function (socket) {
 		} else {
 			console.log("dropping frame. current total delay: " + lightDeltasQueue.totalDelay + ", current frame count: " + lightDeltasQueue.length);
 		}
-		
-		//setLights(params);
-		//console.log('LED sent: ' +ledChainPath);
-		//child_process.exec(ledChainPath, function(a,b,c){});
 	});
 
 	socket.on('disconnect', function () {

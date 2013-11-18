@@ -16,7 +16,6 @@ for (var i = 0; i < NUMLIGHTS; i++) {
 
 var drawCanvas = function() {
 	canvas = document.getElementById("canvas");
-	console.log("hello");
 	var ctx = canvas.getContext("2d");
 	var width = canvas.getBoundingClientRect().width;
 	var height = canvas.getBoundingClientRect().height;
